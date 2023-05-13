@@ -1,0 +1,336 @@
+# React 的依赖包
+  1. babel.js
+    1.1 进行ES版本转换
+    1.2翻译jsx 为浏览器所认识的js
+  2. react.development.js
+      react 的核心库
+  3. react.dom.development.js
+      react 的扩展库，负责react操作dom
+
+# JSX  
+  （JavaScriptXML: react定义的一种类似于XML的JS拓展语法）
+  更加简单的创建虚拟dom, 是原始js创建虚拟dom的语法糖; 由babel把jsx翻译成原始js
+
+# JSX 语法规则
+  1. 定义虚拟dom时，不要写引号；
+  2. 标签中混入JS表达式时要用{ } ; 
+  3. 样式的类名制定不要用class，要用className；
+  4. 内联央视，要用style={{ }} 的方式去写；
+  5. 虚拟dom只有一个根标签；
+  6. 标签必须闭合；
+  7. 标签首字母
+      7.1 若小写字母开头，则将标签转为html中的同名元素；
+      7.2 若大写字母开头，react就去渲染对应的组件；
+
+# XML
+
+# 关于虚拟dom
+  1. 本质是Object类型的对象（也就是一般对象）
+  2. 虚拟dom中变量的属性比真实dom少很多，因为虚拟dom只作用在react内部，无须真实dom那么多的属性。
+  3. 虚拟dom最终会被react转化为真实dom，呈现在页面上。
+
+# 查看JS中变量的类型
+  1.  console.log('varName',varName); 
+  2.  console.log(typeof varName);
+
+# 什么是表达式、什么是语句
+  1.表达式：一个表达式会返回一个值；
+    1.1 a
+    1.2 a+b
+    1.3 demo(1)
+    1.4 arr.map()
+    1.5 function test(){}   //定义一个函数也有返回值，返回值为这个函数
+
+  2.语句: 控制数据走向，不返回值
+    1.1 if(){}
+    1.2 for(){}
+    1.3 switch(){case:xxx}
+
+# 模块与组件、工程化
+  1.模块：
+    1.1 理解：向外提供特定功能的js程序，一般就是一个js文件。
+    1.2 为什么要拆成膜快：随着业务逻辑增加，代码越来越多且复杂
+    1.3 作用：复用，简化编写，提高运行效率
+  
+  2.组件：
+    1.1 理解：用来实现局部功能效果的代码和资源的合集（html/css/js/image）
+    1.2 作用：服用代码，简化项目编码提高运行效率。
+
+# React Developer Tools
+  官方调试工具
+
+# 类的相关知识
+  
+  0.总结： 
+    0.1 类中的构造器不是必须要写的，要对实例进行一些初始化的操作，如添加制定属性时才写。
+    0.2 如果A类继承自B类，且A类中写了构造器，那么A类构造器中的super是必须要调用的。
+    0.3 类中所定义的方法，都是放在了类的原型对象上,供实例去使用。
+
+
+  1. 类的基本知识
+    class Person{
+      //构造器方法
+      constructor(name,age){
+        //构造器中的this是类的实例对象。
+        this.name = name
+        this.age = age
+      }
+      //一般方法
+      speak(){    
+        //speak方法放在了哪里？ 放在了类的原型对象上。供实例使用
+        //通过Person实例调用speak时，speak中的this就是Person实例。
+        console.log(`I am ${this.name}, ${this.age} years old`)
+      }
+    }
+  
+  2. 原生事件绑定
+    //继承类
+    class Person{
+      ...
+    }
+    class Student extends Person{
+      constructor(name,age,grade){
+        super(name,age)
+        this.grade = grade
+      }
+      //重写从父类继承过来的方法
+      speak(){    
+        console.log(`I am ${this.name}, ${this.age} years old`,${this.grade})
+        
+
+    }
+
+  const p1 = new Person();
+  const p2 = new Person();
+  const s1 = new Student();
+
+  3. 类中的方法this指向
+    class Person {
+      constructor(name,age){
+        this.name = name
+        this.age = age
+      }
+      speak(){
+        console.log(this);
+      }
+    }
+    const p1 = new Person('tom',18)
+    p1.speak() //通过实例调用speak。
+
+  4. 给类的本身添加属性，在类中使用 static 关键字； static xxx = 123;
+   4.1 给类的实例对象添加属性，直接 xxx = 123;
+
+# React 面向组件编程
+
+  0.  函数式组件适用于【简单组件的定义】
+      类式组件适用于【复杂组件的定义】（组件是有状态（state）的）
+
+  0. notes
+    0.1 state是组件对象最重要的属性，值是对象(可以包含多个key-value的组合)
+    0.2 组件被称为“状态机”，通过更新组件的state来更新对应的页面显示（重新渲染组件） 
+
+  0. notes
+    0.1 组件中render 方法中的this 为组件实例对象。
+    0.2 组件自定义的方法中this为undefined，如何解决？
+      0.2.1 强制绑定 this：通过函数对象的bind()
+      0.2.2 箭头函数
+    0.2 状态数据不能直接修改或者更新。
+
+  1. 创建函数式组件
+    function Demo(){
+      return <h1>xxxx</h1>
+    }
+  
+    babel 默认开启严格模式，禁止自定义函数中的 this 指向window。
+
+  2. 创建类式组件：
+
+    class Weather extends React.Component{
+      constructor(props){
+        super(props)
+        this.state = { 
+          isHot:true,
+        }
+      }
+      render(){
+        console.log(this)
+        return <h1>Today is {this.state.isHot? 'hot':'cold'},Today has wind</h1>
+      }
+    }
+
+    2.2 onClick事件函数调用  
+    class xxx extends React.Component{
+      constructor(){  //构造器中的this就是该类的实例对象。
+        ...
+        this.changeWeather = this.changeWeather.bind(this) //方法之一，将方法：changeWeather中的this指向该类的实例对象。
+      }
+      render(){
+        return <h1 onClick={demo} > ... </h1>   //此处调用的是函数的名字:demo,不是函数整体:demo()
+      }
+    }
+    function changeWeather(){
+      //changeWeather 放在了哪里？ ----- 放在了 Weather 的实例对象上，供实例使用。
+      //由于changeWeather是作为onClick的回调，所以不是通过实例调用的，是直接调用。
+      //类中的方法默认开启了局部严格模式，所以chnageweather中的this 为undefined.
+      
+      //获取原来的isHot值
+      const isHot = this.state.isHot
+      //注意！！！ 状态（state） 不可直接更改，要借助内置API去更改。
+      //错误的,直接更改：this.state.isHot = !isHot ;
+      const isHot = this.state.isHot
+      this.setState({isHot:!isHot}) //通过setState更新
+      console.log(this);
+    }
+
+    2.2 react 中 state 的简写方式
+    class Car {
+      constructor{
+        this.name = name
+        this.price = price
+      }
+      a = 1     //类中可以直接写赋值语句， a=1 代码的含义是给Car实例对象添加一个属性，名为a，值为1.
+    }
+    const c1 = new Car ('Benz','20000')
+    const c2 = new Car ('BMW','20000')
+
+    2.3 简写后的 weather app。
+    class App2_Weather extends React.Component{
+      state = {isHot:true,wind:'strong'}
+      render(){
+        console.log("render()")
+        return <h1 onClick={this.changeWeather}>Today is {this.state.isHot? 'hot':'cold'},Today wind is {this.state.wind}.</h1>
+      }
+      //自定义方法 --- 要用赋值语句的形式 和 箭头函数。
+      changeWeather = ()=>{  //箭头函数中的this 找到箭头函数体的外侧。
+        const isHot = this.state.isHot;
+        this.setState({isHot:!isHot})
+      }
+    }
+
+  3. 组件三大核心属性2:  props
+    一次将所有实例的批量传递： <Person {...p}>
+    2.1 展开运算符 ： ...
+      在原生js中展开运算符无法展开一个对象；原生中使用花括号加对象名 {...p} 是复制对象的语法。
+
+    props 是只读的
+
+  4. 组件实例三大属性3: refs 和事件处理
+    4.1 字符串形式的ref，已经被新版本弃用
+    4.2 回调函数形式的ref (什么是回调函数：1、程序员自己定义的函数。2、没有手动调用。3、函数最终被执行了。)
+      <input ref={ (current)=>{this.myRefName = current } }></input>
+      回调函数在更新的时候被执行两次，第一次传入参数null，第二次传入参数DOM元素。 传入null让此处回调函数做一次清空。 不想让回调函数执行两次，可以将内连函数定义成类绑定函数。
+    4.3 React.createRef() 
+      // React.createRef 调用后可以返回一个容器，该容器可以储存被ref所标识的节点。该容器专人专用。
+
+    4.4 事件处理
+      4.4.1 通过onXxx 属性置顶时间处理函数（注意大小写，第二个字母大写为React定义的）
+        4.4.1.1 React使用的是自定义（合成）事件，而不是使用原生DOM事件 ----- 为了更好的兼容性
+        4.4.1.2 React中的事件是通过事件委托方式处理的（委托给组件最外层的元素）----- 为了高效
+      4.4.2 通过event.target 得到发生事件的DOM 元素对象。 ----- 不要过度的使用ref
+
+  5. 收集表单数据
+   5.1 包含表单的组件分类
+    a. 受控组件
+      什么事受控组件：随着使用，将数据流入到state中就是受控组件。
+    b. 非受控组件 (uncontrolled Components)
+      什么是非受控组件：1.页面中有表单， 2.页面中所有输入类的dom如果是现用现取，则是非受控组件
+    
+    推荐更多写受控组件，因为使用非受控组件时要使用ref，但是官方文档中不建议过度使用ref。
+
+  6. 高阶函数—函数的柯里化
+    高阶函数： 如果一个函数符合下面2个规范中的任何一个，那该函数就是高阶函数。
+      1.若A函数，接受的参数是一个函数，那么A就可以称之为高阶函数。
+      2.若A函数，调用的返回值依然是一个函数，那么A就可以称之为高阶函数。
+      （常见的高阶函数： Promise、 setTimeout、arr.map()）
+    函数的柯里化：通过函数调用继续返回函数的方式，实现多次接受参数最后统一处理的函数编码形式。
+      function sum(a){
+        return (b)=>{
+          return (c)=>{
+            return a+b+c
+          }}}
+  
+  7. 组件的生命周期
+    componentDidMount()  组件挂载完毕后执行一次
+    componentWillUnmount() 组件将要被卸载前执行一次
+
+    生命周期函数和代码顺序无关；
+
+
+--------------------Life Cycle (Old)----------------------
+    挂载时                      父组件render
+        |                             |
+    constructor               componentWillReceiveProps
+        |                             |
+    componentWillMount        shouldComponentUpdate   <--- setState()
+        |                             |
+                              componentWillUpdate     <--- forceUpdate()
+        |                             |
+            r     e     n    d     e    r
+        |                             |
+    componentDidMount         componentDidUpdate
+                  |                 |
+                  componentWillUnmount
+-------------------------------------------------------
+
+
+(1)  setState() ---> shouldComponentUpdate()  ---> render() ---> componentDidUPdate()
+[ shouldComponentUpdate() return ture or false ] 
+
+(2) forceUpdate() 
+[ 不对状态做出任何修改，做更新 ]
+
+
+  # index 或 id 索引值
+    index 做 key 可能会引起性能问题，index 在操作的过程中可能被人工打乱
+
+.....
+.....
+.....
+
+# 引用库的规范
+  第三方的引用往上靠，
+  自己的引用往下靠
+  样式放在最后
+
+3.1.4 功能界面的组件化编码流程
+  1. 拆分组件： 拆分洁面，抽取组件
+  2. 实现静态组件：使用组件实现净态页面效果
+  3. 实现动态组件
+    3.1 动态显示初始化数据
+      3.1.1 数据类型
+      3.1.2 数据名称
+      3.1.3 保存在哪个组件
+    3.2 交互（从绑定事件监听开始）
+
+
+  组件间的数据流通：
+    父 --> 子 ： props
+    子 --> 父 ： 父创建箭头函数，给子的props传入，等待子调用，并传入参数（数据）。
+
+    创建唯一ID的库 ： UUID 、 NanoID
+
+  --------------------------------------
+    标签中属性事件的参数如果带有小括号（），要保证其返回值是一个函数
+
+    eg: 写法是错误的：
+    handleMouse =(flag)=>{
+      return xxx;
+    }
+     <li onMouseEnter = {this.handMouse(true)}>
+
+    eg: 写法是正确的： 
+    handleMouse =(flag)=>{
+      return ()=>{
+
+      };
+    }
+    <li onMouseEnter = {this.handMouse(true)}>
+  ----------------------------------------
+
+  在<input> 标签中，若使用checked，配套使用onChange，否则会被写死
+
+
+# 第4章 React ajax
+
+# 兄弟组件间的通讯 --- 消息订阅于发布机制
+  工具库： PubSubJS
